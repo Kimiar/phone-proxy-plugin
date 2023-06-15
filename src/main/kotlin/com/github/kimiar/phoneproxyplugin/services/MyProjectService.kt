@@ -16,6 +16,11 @@ class MyProjectService(project: Project) {
 
         private const val cmd_devices = "adb devices"
 
+        private const val cmd_set_proxy = "adb shell settings put global http_proxy "
+        private const val proxy_port = 8888
+
+        private const val cmd_clear_proxy = "adb shell settings put global http_proxy :0"
+
         fun getLocalIp(): String {
             return InetAddress.getLocalHost().hostAddress
         }
@@ -25,9 +30,20 @@ class MyProjectService(project: Project) {
         thisLogger().info(MyBundle.message("projectService", project.name))
     }
 
-    fun getRandomNumber() = (1..100).random()
+    private fun getRandomNumber() = (1..100).random()
 
-    fun getADBDevices(): String {
+    fun setupProxyAddr(): String {
+        val ipStr = NetworkUtil.getLocalIp() ?: return "no ip"
+        execCommand(cmd_set_proxy + "${ipStr}:$proxy_port")
+        return ipStr
+    }
+
+    fun clearProxy(): String {
+        execCommand(cmd_clear_proxy)
+        return "clear"
+    }
+
+    private fun getADBDevices(): String {
         return NetworkUtil.getLocalIp() ?: "no ip"
     }
 

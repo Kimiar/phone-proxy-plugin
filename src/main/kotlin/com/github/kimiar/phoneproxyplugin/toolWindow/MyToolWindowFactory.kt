@@ -34,7 +34,12 @@ class MyToolWindowFactory : ToolWindowFactory {
             add(label)
             add(JButton(MyBundle.message("shuffle")).apply {
                 addActionListener {
-                    label.text = service.getADBDevices()
+                    label.text = service.setupProxyAddr()
+                }
+            })
+            add(JButton("清除").apply {
+                addActionListener {
+                    label.text = service.clearProxy()
                 }
             })
         }

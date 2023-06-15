@@ -1,5 +1,6 @@
 package com.github.kimiar.phoneproxyplugin.util
 
+import java.net.Inet4Address
 import java.net.InetAddress
 import java.net.NetworkInterface
 
@@ -7,7 +8,10 @@ object NetworkUtil {
 
 
     fun getLocalIp(): String? {
-        return getLocalHostExactAddress()?.hostAddress
+        // todo 排除无网情况下，获取到 ipv6 的问题
+        return kotlin.runCatching {
+            Inet4Address.getLocalHost().hostAddress
+        }.getOrNull()
     }
 
     fun getLocalHostExactAddress(): InetAddress? {
